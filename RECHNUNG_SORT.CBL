@@ -1,0 +1,49 @@
+       IDENTIFICATION DIVISION.
+       PROGRAM-ID. RECHNUNG-SORT.
+       AUTHOR. OBERZIER.
+
+       ENVIRONMENT DIVISION.
+       INPUT-OUTPUT SECTION.
+       FILE-CONTROL.
+
+           SELECT RECHNUNGEN ASSIGN TO "rechnungen.dat"
+               ORGANIZATION IS LINE SEQUENTIAL.
+
+           SELECT RECHNUNGSORT ASSIGN TO "rechnungsort.dat"
+               ORGANIZATION IS LINE SEQUENTIAL.
+
+           SELECT SORT-FILE ASSIGN TO DISK.
+
+       DATA DIVISION.
+
+       FILE SECTION.
+
+       FD RECHNUNGEN.
+       01 RECHNUNG-REC.
+           05 R-KUNDENNUMMER   PIC 9(6).
+           05 R-PRODUKTNUMMER  PIC 9(6).
+           05 R-REST           PIC X(23).
+       
+       FD RECHNUNGSORT.
+       01 RECHNUNGSORT-REC.
+           05 RS-KUNDENNUMMER  PIC 9(6).
+           05 RS-PRODUKTNUMMER PIC 9(6).
+           05 RS-REST          PIC X(23).
+       
+       SD SORT-FILE.
+       01 SORT-REC.
+           05 S-KUNDENNUMMER   PIC 9(6).
+           05 S-PRODUKTNUMMER  PIC 9(6).
+           05 S-REST           PIC X(23).
+
+       PROCEDURE DIVISION.
+
+           SORT SORT-FILE
+               ASCENDING KEY S-KUNDENNUMMER
+                             S-PRODUKTNUMMER
+               USING RECHNUNGEN
+               GIVING RECHNUNGSORT
+
+           DISPLAY "RECHNUNGSDATEI ERFOLGREICH SORTIERT"
+
+           STOP RUN.
