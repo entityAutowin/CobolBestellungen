@@ -1,13 +1,8 @@
        IDENTIFICATION DIVISION.
        PROGRAM-ID. BESTELLVERARBEITUNG.
-       AUTHOR. TEAM-A-BIS-E.
-       DATE-WRITTEN. SS-2026.
+       AUTHOR. FIEDLER-OBERZIER.
 
        ENVIRONMENT DIVISION.
-       CONFIGURATION SECTION.
-       SPECIAL-NAMES.
-           DECIMAL-POINT IS COMMA.
-
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
            SELECT KUNDENSTAMM ASSIGN TO "kunden.dat"
@@ -45,8 +40,9 @@
        01  PRODUKT-REC.
            05  P-PRODUKTNUMMER     PIC 9(6).
            05  P-BEZEICHNUNG       PIC X(20).
-           *> Da in der Datei ein Punkt steht ("00150.00"), nutzen wir PIC 9(5).99 zum Einlesen!
-           05  P-PREIS-TXT         PIC 9(5).99.
+           05  P-PREIS-VOR-KOMMA   PIC 9(5).
+           05  FILLER              PIC X.
+           05  P-PREIS-NACH-KOMMA  PIC 9(2).
 
        FD  BESTELLUNGEN.
        01  BESTELL-REC.
@@ -80,7 +76,6 @@
            05  EOF-BESTELL         PIC X  VALUE 'N'.
                88  BESTELL-ENDE    VALUE 'Y'.
 
-       *> Interne numerische Rechenfelder ohne harten Punkt
        01  WS-RECHNUNG-WORK.
            05  WS-PREIS-NUM        PIC 9(5)V99  VALUE ZERO.
            05  WS-GESAMTPREIS      PIC 9(7)V99  VALUE ZERO.
@@ -103,24 +98,29 @@
            STOP RUN.
 
        INITIALISIERUNG.
-           OPEN INPUT  KUNDENSTAMM
-                       BESTELLUNGEN
+           OPEN INPUT  BESTELLUNGEN
            OPEN OUTPUT RECHNUNGEN
                        FEHLER-KUNDE
                        FEHLER-PRODUKT
-                       FEHLER-SPERRE
-
-           PERFORM LESE-NAECHSTEN-KUNDEN.
+                       FEHLER-SPERRE.
 
        VERARBEITUNG.
-           ADD 1 TO Z-BESTELLUNGEN
+           IF BESTELL-REC = SPACES OR B-KUNDENNUMMER = ZERO
+               PERFORM LESE-NAECHSTE-BESTELLUNG
+               EXIT PARAGRAPH
+           END-IF.
 
-       *> ---- MATCH-LOGIK KUNDENSTAMM ----
-           PERFORM UNTIL STAMM-K-ENDE OR K-KUNDENNUMMER >= B-KUNDENNUMMER
+           ADD 1 TO Z-BESTELLUNGEN.
+
+           OPEN INPUT KUNDENSTAMM
+           MOVE 'N' TO EOF-KUNDEN
+           PERFORM LESE-NAECHSTEN-KUNDEN
+
+           PERFORM UNTIL STAMM-K-ENDE OR K-KUNDENNUMMER = B-KUNDENNUMMER
                PERFORM LESE-NAECHSTEN-KUNDEN
-           END-PERFORM
+           END-PERFORM.
 
-           IF STAMM-K-ENDE OR K-KUNDENNUMMER NOT = B-KUNDENNUMMER
+           IF STAMM-K-ENDE
                MOVE BESTELL-REC TO FK-REC
                WRITE FK-REC
                ADD 1 TO Z-ERR-KUNDE
@@ -132,8 +132,9 @@
                ELSE
                    PERFORM PRUEFE-UND-VERARBEITE-PRODUKT
                END-IF
-           END-IF
+           END-IF.
 
+           CLOSE KUNDENSTAMM.
            PERFORM LESE-NAECHSTE-BESTELLUNG.
 
        PRUEFE-UND-VERARBEITE-PRODUKT.
@@ -143,32 +144,29 @@
 
            PERFORM UNTIL STAMM-P-ENDE OR P-PRODUKTNUMMER = B-PRODUKTNUMMER
                PERFORM LESE-NAECHSTES-PRODUKT
-           END-PERFORM
+           END-PERFORM.
 
            IF STAMM-P-ENDE
                MOVE BESTELL-REC TO FP-REC
                WRITE FP-REC
                ADD 1 TO Z-ERR-PRODUKT
            ELSE
-       *> ---- RECHNUNG GENERIEREN ----
                INITIALIZE RECHNUNG-REC
                MOVE B-KUNDENNUMMER  TO R-KUNDENNUMMER
                MOVE B-PRODUKTNUMMER TO R-PRODUKTNUMMER
                MOVE B-MENGE         TO R-MENGE
                
-       *> Konvertiert den eingelesenen String-Punkt sauber in eine reine Rechenzahl
-               MOVE P-PREIS-TXT TO WS-PREIS-NUM
+               COMPUTE WS-PREIS-NUM = P-PREIS-VOR-KOMMA + 
+                                      (P-PREIS-NACH-KOMMA / 100)
                
-       *> Mathematische Berechnung mit sauberen Werten
                MULTIPLY B-MENGE BY WS-PREIS-NUM GIVING WS-GESAMTPREIS
                
-       *> Ausgabe-Zuweisung (GnuCOBOL formatiert hier jetzt genau EINEN Punkt)
                MOVE WS-PREIS-NUM   TO R-EINZELPREIS
                MOVE WS-GESAMTPREIS TO R-GESAMTPREIS
                
                WRITE RECHNUNG-REC
                ADD 1 TO Z-RECHNUNGEN
-           END-IF
+           END-IF.
 
            CLOSE PRODUKTSTAMM.
 
@@ -188,9 +186,18 @@
            END-READ.
 
        ABGESCHLOSSEN.
-           CLOSE KUNDENSTAMM
-                 BESTELLUNGEN
+           CLOSE BESTELLUNGEN
                  RECHNUNGEN
                  FEHLER-KUNDE
                  FEHLER-PRODUKT
-                 FEHLER-SPERRE.
+                 FEHLER-SPERRE
+
+           DISPLAY "======================================="
+           DISPLAY "      COBOL STATISTICS REPORT          "
+           DISPLAY "======================================="
+           DISPLAY "Anzahl verarbeiteter Bestellungen: " Z-BESTELLUNGEN
+           DISPLAY "Anzahl gueltiger Rechnungen      : " Z-RECHNUNGEN
+           DISPLAY "Fehler - Kunde nicht gefunden    : " Z-ERR-KUNDE
+           DISPLAY "Fehler - Produkt nicht gefunden  : " Z-ERR-PRODUKT
+           DISPLAY "Fehler - Kunde gesperrt          : " Z-ERR-SPERRE
+           DISPLAY "=======================================".
