@@ -1,4 +1,3 @@
 cobc -free -x KUNDEN_BESTELL_VERARBEITUNG.CBL
 echo
 ./KUNDEN_BESTELL_VERARBEITUNG
-rm -f *.dylib
