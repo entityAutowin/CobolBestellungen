@@ -22,7 +22,7 @@
        FD  KUNDEN-FILE.
        01  BUF-KUNDENSTAMM      PIC X(27).
        FD  PRODUKT-FILE.
-       01  BUF-PRODUKTSTAMM     PIC X(33).
+       01  BUF-PRODUKTSTAMM     PIC X(34).
 
        WORKING-STORAGE SECTION.
        01  WS-FILE-STATUS-FIELDS.
@@ -72,9 +72,11 @@
                    AT END
                        SET EOF-BESTELL TO TRUE
                    NOT AT END
-                       ADD 1 TO LK-IDX-BESTELL
-                       MOVE BUF-BESTELLUNG TO 
-                            LK-BES-REC (LK-IDX-BESTELL)
+                       IF WS-BESTELL-STATUS = "00" OR "04"
+                          ADD 1 TO LK-IDX-BESTELL
+                          MOVE BUF-BESTELLUNG TO 
+                               LK-BES-REC (LK-IDX-BESTELL)
+                       END-IF
                END-READ
            END-PERFORM
            
@@ -96,9 +98,11 @@
                    AT END
                        SET EOF-KUNDEN TO TRUE
                    NOT AT END
-                       ADD 1 TO LK-IDX-KUNDEN
-                       MOVE BUF-KUNDENSTAMM TO 
-                            LK-KUN-REC (LK-IDX-KUNDEN)
+                       IF WS-KUNDEN-STATUS = "00" OR "04"
+                          ADD 1 TO LK-IDX-KUNDEN
+                          MOVE BUF-KUNDENSTAMM TO 
+                               LK-KUN-REC (LK-IDX-KUNDEN)
+                       END-IF
                END-READ
            END-PERFORM
            
@@ -120,9 +124,11 @@
                    AT END
                        SET EOF-PRODUKT TO TRUE
                    NOT AT END
-                       ADD 1 TO LK-IDX-PRODUKT
-                       MOVE BUF-PRODUKTSTAMM TO 
-                            LK-PRO-REC (LK-IDX-PRODUKT)
+                       IF WS-PRODUKT-STATUS = "00" OR "04"
+                          ADD 1 TO LK-IDX-PRODUKT
+                          MOVE BUF-PRODUKTSTAMM TO 
+                               LK-PRO-REC (LK-IDX-PRODUKT)
+                       END-IF
                END-READ
            END-PERFORM
            
