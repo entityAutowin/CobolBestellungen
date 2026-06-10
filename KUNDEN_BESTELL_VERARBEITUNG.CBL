@@ -193,8 +193,6 @@
                  FEHLER-SPERRE
 
            DISPLAY "======================================="
-           DISPLAY "      COBOL STATISTICS REPORT          "
-           DISPLAY "======================================="
            DISPLAY "Anzahl verarbeiteter Bestellungen: " Z-BESTELLUNGEN
            DISPLAY "Anzahl gueltiger Rechnungen      : " Z-RECHNUNGEN
            DISPLAY "Fehler - Kunde nicht gefunden    : " Z-ERR-KUNDE
