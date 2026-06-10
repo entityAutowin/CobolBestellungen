@@ -1,4 +1,4 @@
-cobc -free main.cob read-data.cob check-kunde.cob check-produkt.cob check-sperre.cob verarbeitung.cob
+cobc -free -x KUNDEN_BESTELL_VERARBEITUNG.CBL
 echo
-cobcrun MAIN
+./KUNDEN_BESTELL_VERARBEITUNG
 rm -f *.dylib
