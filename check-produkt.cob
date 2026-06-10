@@ -1,10 +1,10 @@
 IDENTIFICATION DIVISION.
-       PROGRAM-ID. CHECK-KUNDE.
+       PROGRAM-ID. CHECK-PRODUKT.
 
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT FEHLER-FILE ASSIGN TO "data/fehler_kunde.dat"
+           SELECT FEHLER-FILE ASSIGN TO "data/fehler_produkt.dat"
               ORGANIZATION IS LINE SEQUENTIAL.
 
        DATA DIVISION.
@@ -14,20 +14,18 @@ IDENTIFICATION DIVISION.
 
        LINKAGE SECTION.
            COPY bestellung.
-           COPY kunde.
-       *> Neue Parameter für die Tabellen-Verarbeitung
-       01 LK-KUNDEN-IDX            PIC 9(04).
+           COPY produkt.
+       01 LK-PRODUKT-IDX           PIC 9(04).
        01 LK-HAT-FEHLER            PIC X(02).
 
        PROCEDURE DIVISION USING BES-BESTELLUNG-REC 
-                                KUN-KUNDENSTAMM-REC
-                                LK-KUNDEN-IDX
+                                PRO-PRODUKTSTAMM-REC
+                                LK-PRODUKT-IDX
                                 LK-HAT-FEHLER.
        MAIN-LOGIC.
            MOVE "NEIN" TO LK-HAT-FEHLER.
 
-           *> Zugriff auf die Tabelle mittels des übergebenen Index
-           IF BES-KUNDENNUMMER NOT = KUN-KUNDENNUMMER(LK-KUNDEN-IDX)
+           IF BES-PRODUKTNUMMER NOT = PRO-PRODUKTNUMMER(LK-PRODUKT-IDX)
                MOVE "JA" TO LK-HAT-FEHLER
                
                OPEN EXTEND FEHLER-FILE

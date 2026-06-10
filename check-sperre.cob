@@ -1,10 +1,10 @@
 IDENTIFICATION DIVISION.
-       PROGRAM-ID. CHECK-KUNDE.
+       PROGRAM-ID. CHECK-SPERRE.
 
        ENVIRONMENT DIVISION.
        INPUT-OUTPUT SECTION.
        FILE-CONTROL.
-           SELECT FEHLER-FILE ASSIGN TO "data/fehler_kunde.dat"
+           SELECT FEHLER-FILE ASSIGN TO "data/fehler_sperre.dat"
               ORGANIZATION IS LINE SEQUENTIAL.
 
        DATA DIVISION.
@@ -15,7 +15,6 @@ IDENTIFICATION DIVISION.
        LINKAGE SECTION.
            COPY bestellung.
            COPY kunde.
-       *> Neue Parameter für die Tabellen-Verarbeitung
        01 LK-KUNDEN-IDX            PIC 9(04).
        01 LK-HAT-FEHLER            PIC X(02).
 
@@ -26,8 +25,8 @@ IDENTIFICATION DIVISION.
        MAIN-LOGIC.
            MOVE "NEIN" TO LK-HAT-FEHLER.
 
-           *> Zugriff auf die Tabelle mittels des übergebenen Index
-           IF BES-KUNDENNUMMER NOT = KUN-KUNDENNUMMER(LK-KUNDEN-IDX)
+           *> Prüfung des Status an der indizierten Stelle
+           IF KUN-STATUS(LK-KUNDEN-IDX) = "S"
                MOVE "JA" TO LK-HAT-FEHLER
                
                OPEN EXTEND FEHLER-FILE
