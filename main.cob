@@ -37,9 +37,9 @@
            05  WS-EOF-PRODUKT       PIC X(01) VALUE "N".
                88  EOF-PRODUKT               VALUE "Y".
 
-       COPY bestellungen.
-       COPY kundenstamm.
-       COPY produktstamm.
+       COPY "copybooks/bestellungen".
+       COPY "copybooks/kundenstamm".
+       COPY "copybooks/produktstamm".
 
        01  WS-COUNTERS.
            05  IDX-BESTELL          PIC 9(03) COMP.
