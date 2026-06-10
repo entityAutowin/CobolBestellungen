@@ -4,7 +4,6 @@
 
        DATA DIVISION.
        WORKING-STORAGE SECTION.
-       *> Your original copybooks are pulled in here
        COPY "copybooks/bestellungen".
        COPY "copybooks/kundenstamm".
        COPY "copybooks/produktstamm".
@@ -16,7 +15,6 @@
 
        PROCEDURE DIVISION.
        MAIN-LOGIC.
-      *> Pass the table arrays directly via their first elements
            CALL "READ-DATA" USING 
                BES-BESTELLUNG-REC(1)
                KUN-KUNDENSTAMM-REC(1)

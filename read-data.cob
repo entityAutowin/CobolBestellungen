@@ -38,7 +38,6 @@
                88  EOF-PRODUKT               VALUE "Y".
 
        LINKAGE SECTION.
-       *> Define the tables dynamically matching the sizes
        01  LK-BESTELLUNGEN.
            05  LK-BES-REC           PIC X(17) OCCURS 100 TIMES.
        01  LK-KUNDENSTAMM.
