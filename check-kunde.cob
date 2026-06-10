@@ -1,4 +1,4 @@
-IDENTIFICATION DIVISION.
+       IDENTIFICATION DIVISION.
        PROGRAM-ID. CHECK-KUNDE.
        AUTHOR.     UNSERE-NAMEN.
 
@@ -22,9 +22,9 @@ IDENTIFICATION DIVISION.
 
        *> Kunden-Tabelle über das verlangte Pfad-Copybook
        01 LK-KUNDEN-TABELLE.
-          05 LK-KUNDEN-ANZAHL      PIC 9(03).
+          05 LK-KUNDEN-ANZAHL      PIC 9(03) COMP.
           05 LK-KUNDE-ELEMENT      OCCURS 100 TIMES INDEXED BY KUN-IDX.
-             COPY "copybooks/kundenstamm" REPLACING 01 BY 10.
+             COPY "copybooks/kundenstamm".
 
        01 LK-KUNDEN-IDX            PIC 9(04).
        01 LK-HAT-FEHLER            PIC X(02).
@@ -45,3 +45,4 @@ IDENTIFICATION DIVISION.
            END-IF.
            
            GOBACK.
+           

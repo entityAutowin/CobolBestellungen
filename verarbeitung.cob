@@ -1,4 +1,4 @@
-IDENTIFICATION DIVISION.
+       IDENTIFICATION DIVISION.
        PROGRAM-ID. VERARBEITUNG.
        AUTHOR.     UNSERE-NAMEN.
 
@@ -30,14 +30,14 @@ IDENTIFICATION DIVISION.
 
        LINKAGE SECTION.
        01 LK-KUNDEN-TABELLE.
-          05 LK-KUNDEN-ANZAHL      PIC 9(03).
+          05 LK-KUNDEN-ANZAHL      PIC 9(03) COMP.
           05 LK-KUNDE-ELEMENT      OCCURS 100 TIMES INDEXED BY KUN-IDX.
-             COPY "copybooks/kundenstamm" REPLACING 01 BY 10.
+             COPY "copybooks/kundenstamm".
 
        01 LK-PRODUKT-TABELLE.
-          05 LK-PRODUKT-ANZAHL     PIC 9(03).
+          05 LK-PRODUKT-ANZAHL     PIC 9(03) COMP.
           05 LK-PRODUKT-ELEMENT    OCCURS 100 TIMES INDEXED BY PRO-IDX.
-             COPY "copybooks/produktstamm" REPLACING 01 BY 10.
+             COPY "copybooks/produktstamm".
 
        *> Struktur für die flache Übergabe der aktuellen Bestellung
        01 LK-AKTUELL-BESTELLUNG.
@@ -126,3 +126,4 @@ IDENTIFICATION DIVISION.
            IF WS-GEFUNDEN-IDX = 0
                MOVE 999 TO WS-GEFUNDEN-IDX
            END-IF.
+           

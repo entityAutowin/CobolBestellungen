@@ -1,4 +1,4 @@
-IDENTIFICATION DIVISION.
+       IDENTIFICATION DIVISION.
        PROGRAM-ID. CHECK-PRODUKT.
        AUTHOR.     UNSERE-NAMEN.
 
@@ -22,9 +22,9 @@ IDENTIFICATION DIVISION.
 
        *> Produkt-Tabelle über das verlangte Pfad-Copybook
        01 LK-PRODUKT-TABELLE.
-          05 LK-PRODUKT-ANZAHL     PIC 9(03).
+          05 LK-PRODUKT-ANZAHL     PIC 9(03) COMP.
           05 LK-PRODUKT-ELEMENT    OCCURS 100 TIMES INDEXED BY PRO-IDX.
-             COPY "copybooks/produktstamm" REPLACING 01 BY 10.
+             COPY "copybooks/produktstamm".
 
        01 LK-PRODUKT-IDX           PIC 9(04).
        01 LK-HAT-FEHLER            PIC X(02).
@@ -45,3 +45,4 @@ IDENTIFICATION DIVISION.
            END-IF.
            
            GOBACK.
+           

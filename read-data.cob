@@ -18,9 +18,9 @@
        DATA DIVISION.
        FILE SECTION.
        FD  BESTELL-FILE.
-       01  BUF-BESTELLUNG       PIC X(17).
+       01  BUF-BESTELLUNG       PIC X(18).
        FD  KUNDEN-FILE.
-       01  BUF-KUNDENSTAMM      PIC X(27).
+       01  BUF-KUNDENSTAMM      PIC X(28).
        FD  PRODUKT-FILE.
        01  BUF-PRODUKTSTAMM     PIC X(34).
 
